@@ -1,0 +1,94 @@
+﻿ @using Microsoft.AspNetCore.Identity;
+    <!--model IEnumerable<IdentityUser>-->
+@model PaginatedList<IdentityUser>
+ 
+
+@{
+    ViewData["Title"] = "Index";
+    var roles = ViewBag.Roles;
+}
+
+<h1>User List</h1>
+
+<div class="row">
+    <div class="col-6">
+        <p>
+            <a asp-action="Create">Create New</a>
+        </p>
+    </div>
+    <div class="col-6 d-flex align-items-end justify-content-end">
+        <form method="get" asp-action="Index">
+            <div class="input-group mb-2">
+                <select Name="SelectedRoleId"
+                        asp-items=@roles
+                        class="form-select">
+                    <option value="">Select Role</option>
+                </select>
+                <div class="input-group-append">
+                    <label><input type="text" name="Search" placeholder="UserName or Email..." value="@ViewData["Search"]" /></label>
+                    <input type="submit" value="Search" class="btn btn-outline-secondary" /> |
+                    <a asp-action="Index">Back to Full List</a>
+                </div>
+
+            </div>
+        </form>
+    </div>
+</div>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+              <a asp-action="Index" asp-route-sortOrder="@ViewData["SortOrder"]">@Model.GetDisplayName(i => i.UserName)</a>
+            </th>
+            <th>
+               @Model.GetDisplayName(i=> i.Email)
+            </th>
+            
+            <th>
+               @Model.GetDisplayName(i=> i.LockoutEnd)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.UserName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Email)
+            </td>
+           
+            <td>
+                @Html.DisplayFor(modelItem => item.LockoutEnd)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="ResetPassword" asp-route-id="@item.Id">Password</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
+@{
+    var prevDisabled = !Model.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @nextDisabled">
+    Next
+</a>

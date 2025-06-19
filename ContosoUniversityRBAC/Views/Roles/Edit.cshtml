@@ -1,0 +1,73 @@
+﻿@model ContosoUniversityRBAC.Models.UserViewModels.RoleInputModel
+
+@{
+    ViewData["Title"] = "Edit";
+}
+
+<h1>Edit</h1>
+
+<h4>RoleInputModel</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <!-- Role Profile -->
+            <div class="mb-3">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="Id" />
+                <div class="form-group">
+                    <label asp-for="Name" class="control-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="form-group" style="display: none;">
+                    <label asp-for="NormalizedName" class="control-label"></label>
+                    <Input asp-for="NormalizedName" class="form-control" />
+                    <span asp-validation-for="NormalizedName" class="text-danger"></span>
+                </div>
+            </div>
+            <!-- Claims -->
+            <div class="mt-5" style="border: 1px solid #e5e7eb">
+                <div  >
+                <table>
+                    <tr>
+                        @{
+                         var cnt = 0;
+                        List<ContosoUniversityRBAC.Models.UserViewModels.AssignClaimData> claims = ViewBag.Claims;
+                        if (!(claims is null))
+                        {
+                        foreach (var claim in claims)
+                        {
+                            if (cnt++ % 2 == 0)
+                            {
+                                @:</tr><tr>
+                            }
+                            @:<td>
+                                <input type="checkbox"
+                                       name="selectedClaims"
+                                       value="@claim.ClaimValue"
+                                       @(Html.Raw(claim.Assigned ? "checked=\"checked\"" : "")) />
+                                       @claim.ClaimValue 
+                            @:</td>
+                        }
+                        }
+                        @:</tr>
+                }
+                </table>
+    </div>
+            </div>
+
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

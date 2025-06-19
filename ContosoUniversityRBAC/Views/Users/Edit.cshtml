@@ -1,0 +1,106 @@
+﻿@model ContosoUniversityRBAC.Models.UserViewModels.UserEditInputModel
+
+ 
+
+<h1>@ViewData["Title"]</h1>
+
+<h4>User Edit</h4>
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="Id" />
+            <div class="form-group">
+                <label asp-for="UserName" class="control-label"></label>
+                <input asp-for="UserName" class="form-control" />
+                <span asp-validation-for="UserName" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Email" class="control-label"></label>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="LockoutEnd" class="control-label"></label>
+                <input asp-for="LockoutEnd" class="form-control"  type="datetime-local" 
+                           aria-describedby="lockoutHelp" min="@DateTime.UtcNow.ToString("yyyy-MM-ddTHH:mm")">
+                 <span asp-validation-for="LockoutEnd" class="text-danger d-block mt-1"></span>
+            </div>
+              <fieldset id="claims" class="mt-5">
+                 <!-- Account Role Field -->
+       <div class="mt-5"  >
+         <h3>Assign Roles </h3>
+        <table >
+            <tr>
+                @{
+                    int cnt = 0;
+                    List<ContosoUniversityRBAC.Models.UserViewModels.AssignRoleData> roles = ViewBag.Roles;
+                    if( !(roles is null))
+                    {
+                    foreach (var role in roles)
+                    {
+                        if (cnt++ % 2 == 0)
+                        {
+                            @:</tr><tr>
+                        }
+                        @:<td>
+                            <input type="checkbox"
+                                   name="selectedRoles"
+                                   value="@role.RoleId"
+                                   @(Html.Raw(role.Assigned ? "checked=\"checked\"" : "")) />
+                                   @role.RoleName 
+                        @:</td>
+                    }
+                    }
+                    @:</tr>
+                }
+        </table>
+    </div>
+    </fieldset>
+        <fieldset id="roles" class="mt-5"  >              
+       <div class="mt-5"   >
+         <h3>Assign Resources </h3>
+        <table >
+            <tr>
+                @{
+                      cnt = 0;
+                    List<ContosoUniversityRBAC.Models.UserViewModels.AssignClaimData> claims = ViewBag.Claims;
+                    if (!(claims is null))
+                    {
+                    foreach (var claim in claims)
+                    {
+                        if (cnt++ % 2 == 0)
+                        {
+                            @:</tr><tr>
+                        }
+                        @:<td>
+                            <input type="checkbox"
+                                   name="selectedClaims"
+                                   value="@claim.ClaimValue"
+                                   @(Html.Raw(claim.Assigned ? "checked=\"checked\"" : "")) />
+                                   @claim.ClaimValue 
+                        @:</td>
+                    }
+                    }
+                    @:</tr>
+                }
+        </table>
+    </div>
+    </fieldset>
+           <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}
+  

@@ -1,0 +1,172 @@
+﻿@model ContosoUniversityRBAC.Models.SchoolViewModels.InstructorIndexData;
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Instructors List</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <p>
+            <label>Find by name: <input type="text" name="SearchString" value="@ViewData["CurrentFilter"]" /></label>
+            <input type="submit" value="Search" class="btn btn-default" /> |
+            <a asp-action="Index">Back to Full List</a>
+        </p>
+    </div>
+</form>
+<table class="table">
+    <thead>
+        <tr>
+           
+            <th>
+              <a asp-action="Index" asp-route-sortOrder="@ViewData["NameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]"   asp-route-pageNumber="@(Model.Instructors.PageIndex)">@Model.Instructors.GetDisplayName(p => p.LastName)</a>
+
+            </th>
+            <th>
+ 
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["FirstMinNameSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]"   asp-route-pageNumber="@(Model.Instructors.PageIndex)">@Model.Instructors.GetDisplayName(p => p.FirstMidName)</a>
+
+            </th>
+            <th>
+ 
+                <a asp-action="Index" asp-route-sortOrder="@ViewData["DateSortParm"]" asp-route-currentFilter="@ViewData["CurrentFilter"]"   asp-route-pageNumber="@(Model.Instructors.PageIndex)">@Model.Instructors.GetDisplayName(p => p.HireDate)</a>
+
+            </th>
+            <th>Office</th>
+            <th>Courses</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model.Instructors) 
+        {
+            string selectedRow = "";
+                if (item.ID == (int?)ViewData["InstructorID"])
+                {
+                    selectedRow = "table-success";
+                }
+                <tr class="@selectedRow">
+           
+            <td>
+                 @Html.DisplayFor(modelItem=> item.LastName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.FirstMidName)
+            </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HireDate)
+                </td>
+                 <td>
+                    @if (item.OfficeAssignment != null)
+                    {
+                        @item.OfficeAssignment.Location
+                    }
+                </td>
+                <td>
+                    @foreach (var course in item.CourseAssignments)
+                    {
+                        @course.Course.CourseID @course.Course.Title <br />
+                    }
+                </td>
+                <td>
+                    <a asp-action="Index" asp-route-id="@item.ID"   asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                           asp-route-pageNumber="@(Model.Instructors.PageIndex)"
+                                           asp-route-currentFilter="@ViewData["CurrentFilter"]">Select</a> |
+                    <a asp-action="Edit" asp-route-id="@item.ID">Edit</a> |
+                    <a asp-action="Details" asp-route-id="@item.ID">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.ID">Delete</a>
+                </td>
+        </tr>
+}
+    </tbody>
+</table>
+@if (Model.Courses != null)
+{
+    <h3>Courses Taught by Selected Instructor</h3>
+    <table class="table">
+        <tr>
+            <th></th>
+            <th>Number</th>
+            <th>Title</th>
+            <th>Department</th>
+        </tr>
+
+        @foreach (var item in Model.Courses)
+        {
+            string selectedRow = "";
+            if (item.CourseID == (int?)ViewData["CourseID"])
+            {
+                selectedRow = "success";
+            }
+            <tr class="@selectedRow">
+                <td>
+                   <a asp-action="Index"   asp-route-id="@ViewData["InstructorID"]"   
+                                            asp-route-sortOrder="@ViewData["CurrentSort"]"
+                                            asp-route-courseID="@item.CourseID"
+                                           asp-route-pageNumber="@(Model.Instructors.PageIndex)"
+                                           asp-route-currentFilter="@ViewData["CurrentFilter"]">Select</a> |
+                </td>
+                <td>
+                    @item.CourseID
+                </td>
+                <td>
+                    @item.Title
+                </td>
+                <td>
+                    @item.Department.Name
+                </td>
+            </tr>
+        }
+
+    </table>
+}
+
+@if (Model.Enrollments != null)
+{
+    <h3>
+        Students Enrolled in Selected Course
+    </h3>
+    <table class="table">
+        <tr>
+            <th>Name</th>
+            <th>Grade</th>
+        </tr>
+        @foreach (var item in Model.Enrollments)
+        {
+            <tr>
+                <td>
+                    @item.Student.FullName
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Grade)
+                </td>
+            </tr>
+        }
+    </table>
+}
+@{
+    var prevDisabled = !Model.Instructors.HasPreviousPage ? "disabled" : "";
+    var nextDisabled = !Model.Instructors.HasNextPage ? "disabled" : "";
+}
+
+<a asp-action="Index"
+   asp-route-id="Null"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.Instructors.PageIndex - 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+   class="btn btn-default @prevDisabled">
+    Previous
+</a>
+<a asp-action="Index"
+    asp-route-id="Null"
+   asp-route-sortOrder="@ViewData["CurrentSort"]"
+   asp-route-pageNumber="@(Model.Instructors.PageIndex + 1)"
+   asp-route-currentFilter="@ViewData["CurrentFilter"]"
+    
+   class="btn btn-default @nextDisabled">
+    Next
+</a>
