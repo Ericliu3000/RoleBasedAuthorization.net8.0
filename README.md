@@ -1,15 +1,18 @@
-﻿# Sang.AspNetCore.RoleBasedAuthorization
 
-[![NuGet version (Sang.AspNetCore.RoleBasedAuthorization)](https://img.shields.io/nuget/v/Sang.AspNetCore.RoleBasedAuthorization.svg?style=flat-square)](https://www.nuget.org/packages/Sang.AspNetCore.RoleBasedAuthorization/)
+ASP.NET RBAC Permission Management
 
-Role-Based Authorization for ASP.NET
+Instructions:
+This example extends Microsoft's ContosoUniversity program to implement resource-based permission management for all pages using Sang.AspNetCore.RoleBasedAuthorization.
+Key Features:
+Resource Assignment: Resources can be authorized to roles or directly to users.
+User & Role Management: Added functionalities for managing users and roles.
+Implementation Highlights:
+Leverages the Sang.AspNetCore.RoleBasedAuthorization library to enable fine-grained control over page access.
+Resources (e.g., pages, API endpoints) are mapped to roles or individual users through a configurable permission system.
+Provides a unified interface for assigning, revoking, and verifying permissions, ensuring secure access based on role membership or direct user grants.
+Technical Architecture:
+Builds on ContosoUniversity's existing data model and UI.
+Integrates role-based authorization via dependency injection and custom authorization handlers.
+Extends Identity framework to support role-resource and user-resource mappings in the database.
 
-ASP.NET RBAC 权限管理
-
-## Instructions:
-
- 本例是在 Microsoft 的 ContosoUniversity 程序基础上，通过使用Sang.AspNetCore.RoleBasedAuthorization实现对于所有页面的基于资源的权限管理
- 
- 可以将相应的资源赋权给Role或直接赋权给用户；
- 添加了User和Role管理
-  
+  https://github.com/Ericliu3000/RoleBasedAuthorization.net8.0
