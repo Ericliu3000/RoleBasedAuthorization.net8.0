@@ -32,11 +32,11 @@ namespace ContosoUniversityRBAC.Data
             if (!_userManager.Users.Any())
             {
                 MyUser myuser;
-                myuser = new MyUser { UserName = $"admin", Email = $"admin@tifs.com" };
+                myuser = new MyUser { UserName = $"admin", Email = $"admin@contoso.com" };
                 var result = await _userManager.CreateAsync(myuser, "123456");
              
                 for (int i = 0; i < 10; i++) {
-                    myuser = new MyUser { UserName = $"Test{i}", Email = $"Test{i}@tifs.com" };
+                    myuser = new MyUser { UserName = $"Test{i}", Email = $"Test{i}@contoso.com" };
                      result = await _userManager.CreateAsync(myuser, "123456");
                     if (!result.Succeeded) 
                     {
